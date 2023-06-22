@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'product.g.dart';
+
+@JsonSerializable()
 class Product {
   final int id;
   final String title;
@@ -16,26 +21,12 @@ class Product {
       required this.title,
       required this.rating});
 
-  Map<String, dynamic> toMap() => {
-        "id": id,
-        "title": title,
-        "image": image,
-        "category": category,
-        "price": price,
-        "description": description,
-      };
-
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
-        category: json['category'],
-        description: json['description'],
-        id: json['id'],
-        image: json['image'],
-        price: json['price'],
-        title: json['title'],
-        rating: Rating.fromJson(json['rating']),
-      );
+  factory Product.fromJson(Map<String, dynamic> json) =>
+      _$ProductFromJson(json);
+  Map<String, dynamic> toJson() => _$ProductToJson(this);
 }
 
+@JsonSerializable()
 class Rating {
   final num rating;
   final int count;
@@ -45,8 +36,6 @@ class Rating {
     required this.rating,
   });
 
-  factory Rating.fromJson(Map<String, dynamic> json) => Rating(
-        count: json['count'],
-        rating: json['rate'],
-      );
+  factory Rating.fromJson(Map<String, dynamic> json) => _$RatingFromJson(json);
+  Map<String, dynamic> toJson() => _$RatingToJson(this);
 }
