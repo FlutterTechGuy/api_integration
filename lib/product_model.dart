@@ -49,4 +49,6 @@ class Rating {
         count: json['count'],
         rating: json['rate'],
       );
+
+  Map<String, dynamic> toMap() => {"count": count, "rate": rating};
 }

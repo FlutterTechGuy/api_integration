@@ -31,39 +31,35 @@ class _MainAppState extends State<MainApp> {
                       onTap: () async {
                         const baseURL = 'https://fakestoreapi.com';
 
-                        const endPoint = '/products';
+                        const endPoint = '/carts';
 
                         const finalURL = baseURL + endPoint;
 
-                        final res = await http.get(Uri.parse(finalURL));
+                        final query = {"sort": "asc"};
 
-                        final data = jsonDecode(res.body);
+                        final queryEndpoint =
+                            Uri.https('fakestoreapi.com', endPoint, query);
 
-                        print(data[0]);
-                        product = [];
-                        for (Map<String, dynamic> e in data) {
-                          product.add(Product.fromJson(e));
+                        Product product = Product(
+                          category: "category",
+                          id: 1,
+                          image: "umage",
+                          title: "title",
+                          rating: Rating(count: 12, rating: 234),
+                          description: "dectiptiol",
+                          price: 10,
+                        );
+
+                        try {
+                          final res = await http.get(queryEndpoint);
+
+                          print(res.body);
+                        } catch (e) {
+                          print(e);
                         }
                       },
                       child: const Text('Get request')),
                 ),
-                ...List.generate(product.length, (index) {
-                  Product currentProduct = product[0];
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(currentProduct.image),
-                        ),
-                        trailing: Text(
-                            '${currentProduct.rating.count} gave overall rating of ${currentProduct.rating.rating} '),
-                        title: Text(currentProduct.title),
-                        subtitle: Text(currentProduct.description),
-                      ),
-                      if (index != product.length - 1) const Divider()
-                    ],
-                  );
-                })
               ],
             ),
           ),
