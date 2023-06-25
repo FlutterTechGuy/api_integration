@@ -1,8 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:welltested/welltested.dart';
 
 part 'product.g.dart';
 
 @JsonSerializable()
+@Welltested()
 class Product {
   final int id;
   final String title;

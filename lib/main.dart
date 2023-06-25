@@ -1,8 +1,12 @@
-import 'dart:convert';
 
-import 'package:api_integrations/product_model.dart';
+import 'package:api_integrations/bloc/bloc_cubit.dart';
+import 'package:api_integrations/bloc/bloc_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:api_integrations/product_model.dart';
+
+
 
 void main() {
   runApp(const MainApp());
@@ -14,7 +18,6 @@ class MainApp extends StatefulWidget {
   @override
   State<MainApp> createState() => _MainAppState();
 }
-
 class _MainAppState extends State<MainApp> {
   List<Product> product = [];
 
@@ -24,43 +27,33 @@ class _MainAppState extends State<MainApp> {
       home: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Center(
-                  child: InkWell(
-                      onTap: () async {
-                        const baseURL = 'https://fakestoreapi.com';
+            child: BlocBuilder<APICubit, APIState>(
 
-                        const endPoint = '/carts';
+builder: (context, state)  {
 
-                        const finalURL = baseURL + endPoint;
 
-                        final query = {"sort": "asc"};
 
-                        final queryEndpoint =
-                            Uri.https('fakestoreapi.com', endPoint, query);
+if(state is APILoading) { 
+  //loading
+}
 
-                        Product product = Product(
-                          category: "category",
-                          id: 1,
-                          image: "umage",
-                          title: "title",
-                          rating: Rating(count: 12, rating: 234),
-                          description: "dectiptiol",
-                          price: 10,
-                        );
+if(state is APIError) { 
+  state.err ;
 
-                        try {
-                          final res = await http.get(queryEndpoint);
 
-                          print(res.body);
-                        } catch (e) {
-                          print(e);
-                        }
-                      },
-                      child: const Text('Get request')),
-                ),
-              ],
+  //errror
+}
+
+if(state is APISuccess) { 
+
+  print(state.data);
+
+  /// 
+}
+
+return Text('');
+}
+           
             ),
           ),
         ),
