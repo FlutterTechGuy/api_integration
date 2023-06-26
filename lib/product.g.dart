@@ -28,10 +28,10 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
 
 Rating _$RatingFromJson(Map<String, dynamic> json) => Rating(
       count: json['count'] as int,
-      rating: json['rating'] as num,
+      rating: json['rate'] as num,
     );
 
 Map<String, dynamic> _$RatingToJson(Rating instance) => <String, dynamic>{
-      'rating': instance.rating,
+      'rate': instance.rating,
       'count': instance.count,
     };

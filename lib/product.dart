@@ -31,7 +31,9 @@ class Product {
 
 @JsonSerializable()
 class Rating {
-  final num rating;
+
+@JsonKey(name: 'rate')
+  final num rating; // "rate": 
   final int count;
 
   Rating({

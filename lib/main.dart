@@ -1,12 +1,8 @@
-
 import 'package:api_integrations/bloc/bloc_cubit.dart';
 import 'package:api_integrations/bloc/bloc_state.dart';
+import 'package:api_integrations/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
-import 'package:api_integrations/product_model.dart';
-
-
 
 void main() {
   runApp(const MainApp());
@@ -18,42 +14,64 @@ class MainApp extends StatefulWidget {
   @override
   State<MainApp> createState() => _MainAppState();
 }
+
 class _MainAppState extends State<MainApp> {
   List<Product> product = [];
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: BlocBuilder<APICubit, APIState>(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => APICubit()),
+      ],
+      child: MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            actions: [
+              Builder(builder: (context) {
+                return TextButton(
+                    onPressed: () {
+                      context.read<APICubit>().getAllProducts();
+                    },
+                    child: const Text(
+                      'get data',
+                      style: TextStyle(color: Colors.white),
+                    ));
+              })
+            ],
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: BlocBuilder<APICubit, APIState>(builder: (context, state) {
+                if (state is APILoading) {
+                  //loading
 
-builder: (context, state)  {
+                  return Text(state.msg);
+                }
 
+                if (state is APIError) {
+                  state.err;
 
+                  return Text(state.err);
+                  //errror
+                }
 
-if(state is APILoading) { 
-  //loading
-}
+                if (state is APISuccess) {
+                  return Column(
+                    children: List.generate(state.data.length, (index) {
+                      final singleData = state.data[index];
+                      return Text(singleData.title);
+                    }),
+                  );
+                }
 
-if(state is APIError) { 
-  state.err ;
+                if (state is APIInital) {
+                  return const Text(
+                      "No products found. Try requesting to the server");
+                }
 
-
-  //errror
-}
-
-if(state is APISuccess) { 
-
-  print(state.data);
-
-  /// 
-}
-
-return Text('');
-}
-           
+                return const Text('Something went wrong!');
+              }),
             ),
           ),
         ),

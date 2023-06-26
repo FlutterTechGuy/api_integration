@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:api_integrations/bloc/bloc_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,7 +14,7 @@ class APICubit extends Cubit<APIState> {
 
     const baseURL = 'https://fakestoreapi.com';
 
-    const endPoint = '/carts';
+    const endPoint = '/products';
 
     const finalURL = baseURL + endPoint;
 
@@ -33,7 +35,13 @@ class APICubit extends Cubit<APIState> {
     try {
       final res = await http.get(queryEndpoint);
 
+      final data = jsonDecode(res.body);
+
       List<Product> list = [];
+
+      for (Map<String, dynamic> json in data) {
+        list.add(Product.fromJson(json));
+      }
 
       emit(APISuccess(list));
 
@@ -44,4 +52,7 @@ class APICubit extends Cubit<APIState> {
       emit(APIError(e.toString()));
     }
   }
+
+
+
 }
